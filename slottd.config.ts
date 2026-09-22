@@ -135,7 +135,7 @@ export const config: SlottdConfig = {
   git: {
     repo: 'git@github.com:bmoelk/brainendeavor.com.git',
     branch: 'main',
-    path: 'content',
+    path: '',
     includeDrafts: true,
   },
 

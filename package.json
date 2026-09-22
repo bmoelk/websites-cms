@@ -22,7 +22,7 @@
     "setup:briefcase": "npx tsx scripts/setup-briefcase.ts",
     "type-check": "npx tsc --noEmit",
     "test": "npx vitest run",
-    "briefcase": "cargo run --manifest-path ../../slottD/briefcase/Cargo.toml"
+    "briefcase": "cargo run --manifest-path ../slottD/briefcase/Cargo.toml"
   },
   "dependencies": {
     "hono": "^4.6.0",
@@ -30,7 +30,7 @@
     "kysely": "^0.27.4",
     "kysely-d1": "^0.3.0",
     "memfs": "^3.6.0",
-    "slottd": "github:bmoelk/slottD#main"
+    "slottd": "github:bmoelk/slottD#feature/multisite"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241022.0",

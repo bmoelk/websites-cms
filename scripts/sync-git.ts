@@ -41,19 +41,22 @@ async function runGitSync() {
   const contentDirArg = process.argv.find((a) => a.startsWith('--content-dir='));
   const customContentDir = contentDirArg ? contentDirArg.split('=')[1] : null;
 
+  const siteArg = process.argv.find((a) => a.startsWith('--site='));
+  const targetSite = siteArg ? siteArg.split('=')[1] : (process.env.SLOTTD_SITE || 'brainendeavor.com');
+
   const devVars = parseDotEnv(path.join(process.cwd(), '.dev.vars'));
-  const defaultNeutralRepo = '/Users/bmo/code/websites-deployed/brainendeavor.com';
+  const defaultNeutralRepo = `/Users/bmo/code/websites-git-repos/${targetSite}`;
   const targetRepoDir = process.env.REPO_PATH || devVars.REPO_PATH || defaultNeutralRepo;
   const contentDir = customContentDir 
     ? path.resolve(customContentDir) 
     : (process.env.CONTENT_DIR || devVars.CONTENT_DIR || targetRepoDir);
 
   if (isExport) {
-    console.log(`🚀 Exporting SlottD D1 database (${envFlag}) to Git content directory: ${contentDir}...`);
+    console.log(`🚀 Exporting SlottD D1 database (${envFlag}, site: ${targetSite}) to Git content directory: ${contentDir}...`);
 
     // 1. Fetch all documents from local or remote D1
     const exportJson = execSync(
-      `npx wrangler d1 execute DB ${envFlag} --command="SELECT id, collection, slug, title, status, schema_version, publish_at, data, created_at, updated_at FROM documents" --json`,
+      `npx wrangler d1 execute DB ${envFlag} --command="SELECT id, collection, slug, title, status, schema_version, publish_at, data, created_at, updated_at FROM documents WHERE site_id = '${targetSite}'" --json`,
       { encoding: 'utf8' }
     );
 
@@ -114,7 +117,7 @@ async function runGitSync() {
         title: row.title,
         status: row.status,
         schema_version: row.schema_version,
-        publish_at: row.publish_at,
+        publish_at: row.publish_at === 'null' || row.publish_at === undefined ? null : row.publish_at,
         created_at: row.created_at,
         updated_at: row.updated_at,
         data: dataCopy,
@@ -199,10 +202,10 @@ async function runGitSync() {
         const createdAt = doc.created_at || doc.createdAt || Date.now();
         const updatedAt = doc.updated_at || doc.updatedAt || Date.now();
 
-        sqlStatements.push(`DELETE FROM documents WHERE id = '${docId}' OR (collection = '${col}' AND slug = '${safeSlug}');`);
+        sqlStatements.push(`DELETE FROM documents WHERE site_id = '${targetSite}' AND (id = '${docId}' OR (collection = '${col}' AND slug = '${safeSlug}'));`);
         sqlStatements.push(`
-          INSERT INTO documents (id, collection, slug, title, status, schema_version, data, created_at, updated_at)
-          VALUES ('${docId}', '${col}', '${safeSlug}', '${safeTitle}', '${safeStatus}', 1, '${safeDataJson}', ${createdAt}, ${updatedAt});
+          INSERT INTO documents (id, site_id, collection, slug, title, status, schema_version, data, created_at, updated_at)
+          VALUES ('${docId}', '${targetSite}', '${col}', '${safeSlug}', '${safeTitle}', '${safeStatus}', 1, '${safeDataJson}', ${createdAt}, ${updatedAt});
         `);
         hydratedCount++;
       }
