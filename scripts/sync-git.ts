@@ -46,10 +46,12 @@ async function runGitSync() {
 
   const devVars = parseDotEnv(path.join(process.cwd(), '.dev.vars'));
   const defaultNeutralRepo = `/Users/bmo/code/websites-git-repos/${targetSite}`;
-  const targetRepoDir = process.env.REPO_PATH || devVars.REPO_PATH || defaultNeutralRepo;
+  const targetRepoDir = siteArg
+    ? defaultNeutralRepo
+    : (process.env.REPO_PATH || devVars.REPO_PATH || defaultNeutralRepo);
   const contentDir = customContentDir 
     ? path.resolve(customContentDir) 
-    : (process.env.CONTENT_DIR || devVars.CONTENT_DIR || targetRepoDir);
+    : (siteArg ? defaultNeutralRepo : (process.env.CONTENT_DIR || devVars.CONTENT_DIR || targetRepoDir));
 
   if (isExport) {
     console.log(`🚀 Exporting SlottD D1 database (${envFlag}, site: ${targetSite}) to Git content directory: ${contentDir}...`);

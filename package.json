@@ -1,8 +1,8 @@
 {
-  "name": "brainendeavor-slottd-cms",
+  "name": "websites-cms",
   "version": "0.1.0",
   "private": true,
-  "description": "BrainEndeavor SlottD Edge-Native Micro-CMS with Git Versioning",
+  "description": "SlottD Edge-Native Multi-Site CMS with Git Versioning",
   "type": "module",
   "scripts": {
     "dev": "npx tsx scripts/git-bridge.ts & npx wrangler dev --port 8787 --ip 127.0.0.1",
