@@ -1,0 +1,20 @@
+{
+  "id": "post-drinking-the-react",
+  "collection": "blog_posts",
+  "slug": "drinking-the-react",
+  "title": "Drinking the React",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1500141668,
+  "updated_at": 1787947697,
+  "data": {
+    "author": "brian-moelk",
+    "categories": "React Native, Chain React, React",
+    "excerpt": "Day 2 and beyond of Chain React...",
+    "heroImage": "https://cdn-images-1.medium.com/max/1000/1*fyiSJh7REjy2TwxrA1sihg.jpeg",
+    "publishedAt": "2017-07-15T18:01:08.000Z",
+    "slug": "drinking-the-react",
+    "title": "Drinking the React"
+  }
+}

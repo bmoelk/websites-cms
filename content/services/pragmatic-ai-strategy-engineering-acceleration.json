@@ -1,0 +1,21 @@
+{
+  "id": "Llw3XRrAvYauaCaVNdfe4",
+  "collection": "services",
+  "slug": "pragmatic-ai-strategy-engineering-acceleration",
+  "title": "Pragmatic AI Strategy & Engineering Acceleration",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1787976336,
+  "updated_at": 1787976336,
+  "data": {
+    "badgeText": "Advisory & Collaboration (10–20 hrs/wk)",
+    "deliverables": "Pragmatic AI Economics: Capitalize on subsidized cloud frontier models over hardware & fine-tuning traps., Senior Technical Leverage: Empower senior architects & technical PMs for faster prototyping and product co-creation., Organizational Velocity: Break top-down bottlenecks and unlock startup-speed innovation inside established teams.",
+    "fullDescription": "Helping established software organizations bridge the gap between AI hype and real engineering leverage. We work alongside senior architects, technical PMs, and leadership to modernize workflows, foster bottom-up innovation, and execute capital-efficient frontier model strategies (Claude, Gemini)—without costly custom-model distractions.",
+    "iconName": "mind-map",
+    "order": 3,
+    "shortSummary": "Helping established software organizations bridge the gap between AI hype and real engineering leverage. We work alongside senior architects, technical PMs, and leadership to modernize workflows, foster bottom-up innovation, and execute capital-efficient frontier model strategies (Claude, Gemini)—without costly custom-model distractions.",
+    "slug": "pragmatic-ai-strategy-engineering-acceleration",
+    "title": "Pragmatic AI Strategy & Engineering Acceleration"
+  }
+}

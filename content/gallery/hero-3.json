@@ -1,0 +1,20 @@
+{
+  "id": "gal-hero-3",
+  "collection": "gallery",
+  "slug": "hero-3",
+  "title": "BrainEndeavor Systems Architecture 3",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788145830,
+  "updated_at": 1788198637,
+  "data": {
+    "alt": "BrainEndeavor systems photo 3",
+    "galleryKey": "hero_slides",
+    "imageUrl": "https://cms.brainendeavor.com/media/hero-3.jpeg",
+    "order": 3,
+    "pageSlug": "home",
+    "slug": "hero-3",
+    "title": "BrainEndeavor Systems Architecture 3"
+  }
+}

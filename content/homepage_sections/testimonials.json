@@ -1,0 +1,21 @@
+{
+  "id": "section-testimonials",
+  "collection": "homepage_sections",
+  "slug": "testimonials",
+  "title": "What Colleagues & Partners Say",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1787977409,
+  "updated_at": 1787977409,
+  "data": {
+    "badgeIcon": "conference",
+    "badgeText": "Endorsements & Collaborations",
+    "description": "What colleagues, executives, and business partners say about working together.",
+    "enabled": true,
+    "order": 4,
+    "sectionKey": "testimonials",
+    "slug": "testimonials",
+    "title": "What Colleagues & Partners Say"
+  }
+}

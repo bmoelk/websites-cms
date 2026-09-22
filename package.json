@@ -1,0 +1,47 @@
+{
+  "name": "brainendeavor-slottd-cms",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BrainEndeavor SlottD Edge-Native Micro-CMS with Git Versioning",
+  "type": "module",
+  "scripts": {
+    "dev": "npx tsx scripts/git-bridge.ts & npx wrangler dev --port 8787 --ip 127.0.0.1",
+    "bridge": "npx tsx scripts/git-bridge.ts",
+    "deploy": "npx wrangler deploy",
+    "deploy:prod": "npx wrangler deploy -c wrangler.overrides.toml",
+    "db:migrate:local": "npx wrangler d1 migrations apply brainendeavor-slottd-db --local",
+    "db:migrate:remote": "npx wrangler d1 migrations apply brainendeavor-slottd-db --remote -c wrangler.overrides.toml",
+    "import:sonicjs": "npx tsx scripts/import-from-sonicjs.ts",
+    "import:sonicjs:remote": "npx tsx scripts/import-from-sonicjs.ts --remote",
+    "sync:git": "npx tsx scripts/sync-git.ts",
+    "sync:media": "npx tsx scripts/sync-media.ts",
+    "sync:media:remote": "npx tsx scripts/sync-media.ts --remote",
+    "export": "npx tsx scripts/sync-git.ts --export",
+    "release": "npx tsx scripts/sync-git.ts --export --push",
+    "setup": "npx tsx scripts/setup-briefcase.ts",
+    "setup:briefcase": "npx tsx scripts/setup-briefcase.ts",
+    "type-check": "npx tsc --noEmit",
+    "test": "npx vitest run",
+    "briefcase": "cargo run --manifest-path ../../slottD/briefcase/Cargo.toml"
+  },
+  "dependencies": {
+    "hono": "^4.6.0",
+    "isomorphic-git": "^1.41.9",
+    "kysely": "^0.27.4",
+    "kysely-d1": "^0.3.0",
+    "memfs": "^3.6.0",
+    "slottd": "github:bmoelk/slottD#main"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241022.0",
+    "@inquirer/prompts": "^8.7.2",
+    "@types/node": "^26.4.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.3",
+    "wrangler": "^3.84.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

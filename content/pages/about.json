@@ -1,0 +1,29 @@
+{
+  "id": "-eVTzAUrXeoXUIwwjvZXO",
+  "collection": "pages",
+  "slug": "about",
+  "title": "Strategic Leadership & Software Engineering",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788207396,
+  "updated_at": 1788890316740,
+  "data": {
+    "badgeText": "About BrainEndeavor",
+    "careerHighlights": "Ginkgo Bioworks: Senior Software Engineer scaling complex platform & data integrations.\nGenalyte: Senior Manager & Architect for blood diagnostic devices (Maverick) & robotic edge labs (Merlin), helped achieve FDA clearance & Covid-19 EUA.\nSHRM: Senior Architect optimizing enterprise systems, bridging strategic vision with tactical implementation across operating units.\nDemosphere International: Chief Technology Officer leading technical strategy, product platform evolution, and engineering management.",
+    "collection": "pages",
+    "craftText": "Beyond code, I hand-build and sculpt ceramic pottery. Tactile clay work requires patience, balance, and acute temporal awareness—respecting natural drying phases just as good architecture respects state evolution over time.",
+    "craftTitle": "Hand-Built Pottery & Ceramic Sculpture",
+    "cynefinText": "I apply the Cynefin framework (Simple, Complicated, Complex, Chaotic) to navigate software investment decisions. Understanding which domain a problem inhabits prevents over-engineering and aligns tech with true business goals.",
+    "cynefinTitle": "Cynefin & Sensemaking",
+    "description": "Learn about Brian Moelk's background in startup CTO leadership, enterprise systems architecture, MedTech edge software, and Cynefin complexity sensemaking.",
+    "founderHandle": "brianmoelk",
+    "founderLocation": "San Diego, California",
+    "founderName": "Brian Moelk",
+    "founderRole": "Founder, Chief Architect & Technical Executive",
+    "heroImage": "https://cms.brainendeavor.com/media/author-brian-moelk-2.jpg",
+    "slug": "about",
+    "subtitle": "Technical executive, systems architect, and builder dedicated to pragmatic software design, Cynefin sensemaking, and high-leverage edge infrastructure.",
+    "title": "Strategic Leadership & Software Engineering"
+  }
+}

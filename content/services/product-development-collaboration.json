@@ -1,0 +1,21 @@
+{
+  "id": "srv-product-collaboration",
+  "collection": "services",
+  "slug": "product-development-collaboration",
+  "title": "Product Development Collaboration",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1787892634,
+  "updated_at": 1787977409,
+  "data": {
+    "badgeText": "Engineering Partnership",
+    "deliverables": "Full-Stack Edge & Web Applications, High-Speed Rust & TypeScript Services, Embedded Co-Development & Mentorship",
+    "fullDescription": "Embedded engineering partnership to build, refine, and launch high-leverage digital products. Working directly with your core team to deliver robust, performant software built on modern web standards and solid engineering practices.",
+    "iconName": "team-building",
+    "order": 2,
+    "shortSummary": "Embedded engineering partnership to build, refine, and launch high-leverage digital products. Working directly with your core team to deliver robust, performant software built on modern web standards and solid engineering practices.",
+    "slug": "product-development-collaboration",
+    "title": "Product Development Collaboration"
+  }
+}

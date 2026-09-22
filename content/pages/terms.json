@@ -1,0 +1,18 @@
+{
+  "id": "page-terms",
+  "collection": "pages",
+  "slug": "terms",
+  "title": "Terms of Service",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1787977409,
+  "updated_at": 1788198637,
+  "data": {
+    "badgeText": "Legal",
+    "description": "Terms and conditions governing the use of BrainEndeavor services.",
+    "heroImage": "",
+    "slug": "terms",
+    "title": "Terms of Service"
+  }
+}

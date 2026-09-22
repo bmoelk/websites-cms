@@ -1,0 +1,22 @@
+{
+  "id": "gal-pottery-1",
+  "collection": "gallery",
+  "slug": "gargoyle-fountain",
+  "title": "Gargoyle Fountain",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788145830,
+  "updated_at": 1788891184955,
+  "data": {
+    "alt": "Hand-built ceramic vessel 1",
+    "caption": "High-fire stoneware vessel hand-built in the studio.",
+    "collection": "gallery",
+    "galleryKey": "pottery",
+    "imageUrl": "/media/pottery-6.jpg",
+    "order": 4,
+    "pageSlug": "about",
+    "slug": "gargoyle-fountain",
+    "title": "Gargoyle Fountain"
+  }
+}

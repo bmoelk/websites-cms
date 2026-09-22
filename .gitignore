@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+.npm
+package-lock.json
+
+# Local Environment & Secrets
+.dev.vars
+.dev.vars.*
+wrangler.overrides.toml
+wrangler.local.toml
+
+# Cloudflare / Wrangler local state
+.wrangler/
+
+# Build artifacts & OS files
+dist/
+.DS_Store
+*.log

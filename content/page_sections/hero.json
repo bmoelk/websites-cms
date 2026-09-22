@@ -1,0 +1,31 @@
+{
+  "id": "section-home-hero",
+  "collection": "page_sections",
+  "slug": "hero",
+  "title": "Engineering the Next Generation of Digital Systems",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788145830,
+  "updated_at": 1789115164465,
+  "data": {
+    "badgeIcon": "rocket",
+    "badgeText": "Edge Infrastructure & Ventures",
+    "collection": "page_sections",
+    "created_at": "1788145830",
+    "description": "BrainEndeavor is an edge-first engineering studio and venture lab architecting resilient cloud systems.",
+    "enabled": "",
+    "order": 1,
+    "pageSlug": "home",
+    "primaryCtaText": "Explore Ventures",
+    "primaryCtaUrl": "#projects-matrix",
+    "publish_at": "",
+    "schema_version": "1",
+    "secondaryCtaText": "Core Capabilities",
+    "secondaryCtaUrl": "#feature-bento",
+    "sectionKey": "hero",
+    "slug": "hero",
+    "title": "Engineering the Next Generation of Digital Systems",
+    "updated_at": "1789099537713"
+  }
+}

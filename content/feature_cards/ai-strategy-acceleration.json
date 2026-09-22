@@ -1,0 +1,24 @@
+{
+  "id": "card-srv-ai-strategy",
+  "collection": "feature_cards",
+  "slug": "ai-strategy-acceleration",
+  "title": "Pragmatic AI Strategy & Engineering Acceleration",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788145830,
+  "updated_at": 1788198637,
+  "data": {
+    "badgeText": "Advisory & Collaboration (10–20 hrs/wk)",
+    "colSpan": 2,
+    "icon": "mind-map",
+    "linkText": "Discuss Advisory Engagement",
+    "linkUrl": "/contact",
+    "order": 3,
+    "pageSlug": "home",
+    "sectionKey": "services",
+    "slug": "ai-strategy-acceleration",
+    "summary": "Helping established software organizations bridge the gap between AI hype and real engineering leverage. We work alongside senior architects, technical PMs, and leadership to modernize workflows, foster bottom-up innovation, and execute capital-efficient frontier model strategies (Claude, Gemini)—without costly custom-model distractions.",
+    "title": "Pragmatic AI Strategy & Engineering Acceleration"
+  }
+}

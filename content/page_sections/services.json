@@ -1,0 +1,22 @@
+{
+  "id": "section-home-services",
+  "collection": "page_sections",
+  "slug": "services",
+  "title": "Our Services",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788145830,
+  "updated_at": 1788198637,
+  "data": {
+    "badgeIcon": "bulb",
+    "badgeText": "Capabilities & Expertise",
+    "description": "Targeted engineering architecture, embedded collaboration, and AI implementation tailored for growth-oriented teams.",
+    "enabled": true,
+    "order": 3,
+    "pageSlug": "home",
+    "sectionKey": "services",
+    "slug": "services",
+    "title": "Our Services"
+  }
+}

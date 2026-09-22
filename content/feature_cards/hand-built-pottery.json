@@ -1,0 +1,22 @@
+{
+  "id": "card-about-craft",
+  "collection": "feature_cards",
+  "slug": "hand-built-pottery",
+  "title": "Hand-Built Pottery & Ceramic Sculpture",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788145830,
+  "updated_at": 1788198637,
+  "data": {
+    "badgeText": "Tactile Craftsmanship",
+    "colSpan": 1,
+    "icon": "tabler/pot",
+    "order": 2,
+    "pageSlug": "about",
+    "sectionKey": "philosophy",
+    "slug": "hand-built-pottery",
+    "summary": "Beyond code, I hand-build and sculpt ceramic pottery. Tactile clay work requires patience, balance, and acute temporal awareness—respecting natural drying phases just as good architecture respects state evolution over time.",
+    "title": "Hand-Built Pottery & Ceramic Sculpture"
+  }
+}

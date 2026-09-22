@@ -1,0 +1,23 @@
+{
+  "id": "test-ben-jones",
+  "collection": "testimonials",
+  "slug": "ben-jones",
+  "title": "Ben Jones",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1787977409,
+  "updated_at": 1788198637,
+  "data": {
+    "authorName": "Ben Jones",
+    "authorRole": "Collabrax",
+    "authorUrl": "http://collabrax.com",
+    "avatarUrl": "https://cms.brainendeavor.com/media/bjones.jpg",
+    "companyOrOrg": "Collabrax",
+    "featured": true,
+    "kind": "partner_endorsement",
+    "order": 2,
+    "quoteText": "Brian's inquisitive nature makes him a true asset to any organization, as he consistently explores new areas of technology and can successfully tackle any challenge he faces.",
+    "slug": "ben-jones"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "id": "KSVWnP_NQDpo7xfbizQNI",
+  "collection": "homepage_sections",
+  "slug": "contact",
+  "title": "Let's Build Something",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1787999795,
+  "updated_at": 1787999795,
+  "data": {
+    "badgeIcon": "lock-square",
+    "badgeText": "Direct Contact & Inquiries",
+    "description": "Whether you need high-impact architectural guidance, an embedded co-development partner, or want to explore venture collaboration, reach out directly below.",
+    "enabled": true,
+    "order": 5,
+    "primaryCtaText": "",
+    "primaryCtaUrl": "",
+    "secondaryCtaText": "",
+    "secondaryCtaUrl": "",
+    "sectionKey": "contact",
+    "slug": "contact",
+    "title": "Let's Build Something"
+  }
+}

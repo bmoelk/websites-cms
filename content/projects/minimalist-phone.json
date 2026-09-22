@@ -1,0 +1,22 @@
+{
+  "id": "M1Ml6VoNSyFyljhSZ3keE",
+  "collection": "projects",
+  "slug": "minimalist-phone",
+  "title": "Minimalist Phone",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1787950139,
+  "updated_at": 1788887224472,
+  "data": {
+    "badgeText": "R&D Exploration",
+    "category": "rnd",
+    "description": "Custom distraction-free Android launcher built on LineageOS using Sony Xperia XZ1 Compact. Focused on maximal offline music playing and minimal online social media madness.",
+    "destinationUrl": "",
+    "githubUrl": "",
+    "name": "Minimalist Phone",
+    "order": 6,
+    "slug": "minimalist-phone",
+    "title": "Minimalist Phone"
+  }
+}

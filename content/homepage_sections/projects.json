@@ -1,0 +1,21 @@
+{
+  "id": "section-projects",
+  "collection": "homepage_sections",
+  "slug": "projects",
+  "title": "Our Work",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1787977409,
+  "updated_at": 1787977409,
+  "data": {
+    "badgeIcon": "rocket",
+    "badgeText": "Active Ventures & R&D",
+    "description": "A snapshot of active ventures, published open-source toolchains, and experimental hardware/software R&D.",
+    "enabled": true,
+    "order": 2,
+    "sectionKey": "projects",
+    "slug": "projects",
+    "title": "Our Work"
+  }
+}

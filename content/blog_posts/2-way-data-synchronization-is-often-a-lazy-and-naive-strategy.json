@@ -1,0 +1,20 @@
+{
+  "id": "post-2-way-data-synchronization-is-often-a-lazy-and-naive-strategy",
+  "collection": "blog_posts",
+  "slug": "2-way-data-synchronization-is-often-a-lazy-and-naive-strategy",
+  "title": "2-way Data Synchronization is often a lazy and naive strategy",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1531157630,
+  "updated_at": 1787947691,
+  "data": {
+    "author": "brian-moelk",
+    "categories": "It Strategy, Synchronization",
+    "excerpt": "TL;DR — Start with the simple, ideal architecture: 1-way data flow with message-based events. Adopt 2-way synchronization as a last resort....",
+    "heroImage": "https://cdn-images-1.medium.com/max/1024/1*xCBVegDxObxgQneCAEDqgw.jpeg",
+    "publishedAt": "2018-07-09T17:33:50.000Z",
+    "slug": "2-way-data-synchronization-is-often-a-lazy-and-naive-strategy",
+    "title": "2-way Data Synchronization is often a lazy and naive strategy"
+  }
+}

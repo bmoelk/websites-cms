@@ -1,0 +1,21 @@
+{
+  "id": "d04dbb8e-35a6-4ad5-b6b2-50b50c4bb29b",
+  "collection": "projects",
+  "slug": "slottd",
+  "title": "slottD",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788882698910,
+  "updated_at": 1788887224472,
+  "data": {
+    "badgeText": "",
+    "category": "opensource",
+    "collection": "projects",
+    "description": "A lightweight, edge-native micro-CMS built for Cloudflare Workers, D1, and R2 designed for Astro and SlotWire.",
+    "destinationUrl": "",
+    "githubUrl": "https://github.com/bmoelk/slottD",
+    "image": "",
+    "order": 5
+  }
+}

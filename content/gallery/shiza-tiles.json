@@ -1,0 +1,21 @@
+{
+  "id": "gal-pottery-3",
+  "collection": "gallery",
+  "slug": "shiza-tiles",
+  "title": "Shiza Tiles",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788145830,
+  "updated_at": 1788891184955,
+  "data": {
+    "alt": "Hand-built ceramic sculpture",
+    "caption": "Architectural ceramic form exploring balance and negative space.",
+    "galleryKey": "pottery",
+    "imageUrl": "https://cms.brainendeavor.com/media/pottery-3.jpg",
+    "order": 2,
+    "pageSlug": "about",
+    "slug": "shiza-tiles",
+    "title": "Shiza Tiles"
+  }
+}

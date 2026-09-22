@@ -1,0 +1,21 @@
+{
+  "id": "srv-technical-consulting",
+  "collection": "services",
+  "slug": "technical-consulting",
+  "title": "Technical Consulting",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1787892634,
+  "updated_at": 1787977409,
+  "data": {
+    "badgeText": "Advisory & Architecture",
+    "deliverables": "Edge Systems & Cloud Architecture, Performance & Security Audits, Tech Stack Selection & Strategy",
+    "fullDescription": "High-impact advisory for leadership teams navigating modern web infrastructure, distributed edge architectures (Cloudflare Workers, D1), and Rust performance optimization. Translate technical complexity into clear, resilient growth roadmaps.",
+    "iconName": "business-plan",
+    "order": 1,
+    "shortSummary": "High-impact advisory for leadership teams navigating modern web infrastructure, distributed edge architectures (Cloudflare Workers, D1), and Rust performance optimization. Translate technical complexity into clear, resilient growth roadmaps.",
+    "slug": "technical-consulting",
+    "title": "Technical Consulting"
+  }
+}

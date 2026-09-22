@@ -1,0 +1,24 @@
+{
+  "id": "page-home",
+  "collection": "pages",
+  "slug": "home",
+  "title": "BrainEndeavor — Edge Engineering & Venture Studio",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788239341659,
+  "updated_at": 1788239341659,
+  "data": {
+    "badgeText": "Venture Studio",
+    "collection": "pages",
+    "description": "BrainEndeavor is an edge-first engineering studio and venture lab architecting resilient cloud systems.",
+    "founderHandle": "bmoelk",
+    "founderLocation": "Austin, TX",
+    "founderName": "Brian Moelk",
+    "founderRole": "Founder & Principal Architect",
+    "heroImage": "https://cms.brainendeavor.com/media/hero-1.jpeg",
+    "slug": "home",
+    "subtitle": "Architecting Resilient Cloud Systems, Distributed Edge Databases & Telemetry Networks",
+    "title": "BrainEndeavor — Edge Engineering & Venture Studio"
+  }
+}

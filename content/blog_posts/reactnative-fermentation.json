@@ -1,0 +1,20 @@
+{
+  "id": "post-reactnative-fermentation",
+  "collection": "blog_posts",
+  "slug": "reactnative-fermentation",
+  "title": "ReactNative Fermentation",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1499754050,
+  "updated_at": 1787947698,
+  "data": {
+    "author": "brian-moelk",
+    "categories": "React Native, Chain React",
+    "excerpt": "First Day of Chain React 2017...",
+    "heroImage": "https://cdn-images-1.medium.com/max/1024/1*3FtiqPlA6byleo6ng4SK5g.jpeg",
+    "publishedAt": "2017-07-11T06:20:50.000Z",
+    "slug": "reactnative-fermentation",
+    "title": "ReactNative Fermentation"
+  }
+}

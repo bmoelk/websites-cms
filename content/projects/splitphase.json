@@ -1,0 +1,20 @@
+{
+  "id": "proj-splitphase",
+  "collection": "projects",
+  "slug": "splitphase",
+  "title": "splitphase.io",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1787888885,
+  "updated_at": 1787895889,
+  "data": {
+    "badgeText": "Active Venture",
+    "category": "venture",
+    "description": "Smart energy management & smart grid telemetry monitoring systems for renewable optimization and power balance.",
+    "destinationUrl": "https://splitphase.io",
+    "githubUrl": "",
+    "name": "splitphase.io",
+    "order": 1
+  }
+}

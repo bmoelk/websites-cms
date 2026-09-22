@@ -1,0 +1,22 @@
+{
+  "id": "section-about-philosophy",
+  "collection": "page_sections",
+  "slug": "philosophy",
+  "title": "Frameworks & Studio Craftsmanship",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788145830,
+  "updated_at": 1788198637,
+  "data": {
+    "badgeIcon": "bulb",
+    "badgeText": "Philosophy & Craft",
+    "description": "Navigating software complexity through the Cynefin sensemaking framework and tactile ceramic art.",
+    "enabled": true,
+    "order": 2,
+    "pageSlug": "about",
+    "sectionKey": "philosophy",
+    "slug": "philosophy",
+    "title": "Frameworks & Studio Craftsmanship"
+  }
+}

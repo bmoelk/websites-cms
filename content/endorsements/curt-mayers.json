@@ -1,0 +1,23 @@
+{
+  "id": "end-curt-mayers",
+  "collection": "endorsements",
+  "slug": "curt-mayers",
+  "title": "Curt Mayers",
+  "status": "published",
+  "schema_version": 1,
+  "publish_at": null,
+  "created_at": 1788145830,
+  "updated_at": 1788198637,
+  "data": {
+    "authorName": "Curt Mayers",
+    "authorRole": "EIDR",
+    "authorUrl": "http://eidr.org/",
+    "avatarUrl": "https://cms.brainendeavor.com/media/cmayers.jpg",
+    "companyOrOrg": "EIDR",
+    "featured": true,
+    "kind": "partner_endorsement",
+    "order": 1,
+    "quoteText": "Brian has an astounding and wide-ranging intellect that drives him to explore new ideas, technologies, and products. In eras past, he would have been an explorer, or a scout.",
+    "slug": "curt-mayers"
+  }
+}
