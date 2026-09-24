@@ -30,7 +30,7 @@
     "kysely": "^0.27.4",
     "kysely-d1": "^0.3.0",
     "memfs": "^3.6.0",
-    "slottd": "github:bmoelk/slottD#feature/multisite"
+    "slottd": "github:bmoelk/slottD#main"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241022.0",

@@ -1,6 +1,7 @@
 import http from 'http';
 import { execSync } from 'child_process';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -52,19 +53,53 @@ const server = http.createServer(async (req, res) => {
   // 2. Execute release (Export from D1, commit, tag, push via host SSH)
   if (url === '/exec/release' && req.method === 'POST') {
     const body = await parseJsonBody(req);
+    const siteId = body.siteId?.trim();
+    if (!siteId) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: "siteId is required for Git release operations; the 'default' site concept has been abolished." }));
+      return;
+    }
+    const repoPath = body.repoPath?.trim();
+    if (!repoPath) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: "repoPath is required for Git release operations." }));
+      return;
+    }
+
     const tag = body.tag || `release-${Date.now()}`;
     const message = body.message || `chore(content): release snapshot ${tag}`;
     const push = body.push !== false;
-    // Hardened safety guard: ALWAYS enforce neutral content repository, NEVER allow monorepo
-    const repoPath = defaultNeutralRepo;
+    const remoteUrl = body.url?.trim();
+    const branch = body.branch?.trim() || 'main';
 
     let outputLog = '';
 
     try {
+      const hasLocalGit = fs.existsSync(path.join(repoPath, '.git'));
+      let workingDir = repoPath;
+      let tempDir: string | null = null;
+
+      if (!hasLocalGit) {
+        if (!remoteUrl) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({
+            success: false,
+            error: `Declared repository '${repoPath}' has no .git directory and no remote URL was provided for an ephemeral clone.`,
+          }));
+          return;
+        }
+        tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'slottd-bridge-release-'));
+        workingDir = tempDir;
+        outputLog += `⚡ [Bridge] No local clone declared at ${repoPath}. Using ephemeral scratch clone at ${tempDir}.\n`;
+        execSync(`git clone --depth 1 --branch "${branch}" "${remoteUrl}" "${tempDir}"`, { encoding: 'utf8' });
+      } else {
+        outputLog += `📂 [Bridge] Releasing directly in local repository: ${repoPath}\n`;
+      }
+
       // Step A: Trigger fresh export from D1 to content files
-      outputLog += `[Bridge] Exporting active D1 database to ${repoPath}...\n`;
+      outputLog += `[Bridge] Exporting active D1 database to ${workingDir} (site: ${siteId})...\n`;
       try {
-        const exportOutput = execSync(`npx tsx scripts/sync-git.ts --export`, {
+        const exportOutput = execSync(`npx tsx scripts/sync-git.ts --export --site=${siteId}`, {
           cwd: cmsRootDir,
           encoding: 'utf8',
         });
@@ -74,28 +109,28 @@ const server = http.createServer(async (req, res) => {
       }
 
       // Step B: Git add, commit, tag
-      outputLog += `[Bridge] Staging changes in ${repoPath}...\n`;
-      execSync(`git -C "${repoPath}" add -A`, { encoding: 'utf8' });
+      outputLog += `[Bridge] Staging changes in ${workingDir}...\n`;
+      execSync(`git -C "${workingDir}" add -A`, { encoding: 'utf8' });
 
       outputLog += `[Bridge] Creating commit...\n`;
       const commitRes = execSync(
-        `git -C "${repoPath}" commit -m "${message.replace(/"/g, '\\"')}" || true`,
+        `git -C "${workingDir}" commit -m "${message.replace(/"/g, '\\"')}" || true`,
         { encoding: 'utf8' }
       );
       if (commitRes.trim()) outputLog += commitRes.trim() + '\n';
 
       outputLog += `[Bridge] Creating annotated tag '${tag}'...\n`;
       const tagRes = execSync(
-        `git -C "${repoPath}" tag -a "${tag.replace(/"/g, '\\"')}" -m "${message.replace(/"/g, '\\"')}" || true`,
+        `git -C "${workingDir}" tag -a "${tag.replace(/"/g, '\\"')}" -m "${message.replace(/"/g, '\\"')}" || true`,
         { encoding: 'utf8' }
       );
       if (tagRes.trim()) outputLog += tagRes.trim() + '\n';
 
       // Step C: Push via host SSH key
       if (push) {
-        outputLog += `[Bridge] Pushing commit and tag to Git remote (SSH)...\n`;
+        outputLog += `[Bridge] Pushing commit and tag to Git remote...\n`;
         const pushRes = execSync(
-          `git -C "${repoPath}" push origin HEAD && git -C "${repoPath}" push origin "${tag.replace(/"/g, '\\"')}"`,
+          `git -C "${workingDir}" push origin HEAD && git -C "${workingDir}" push origin "${tag.replace(/"/g, '\\"')}"`,
           { encoding: 'utf8' }
         );
         if (pushRes.trim()) outputLog += pushRes.trim() + '\n';
@@ -104,11 +139,20 @@ const server = http.createServer(async (req, res) => {
         outputLog += `✓ Tagged locally (push skipped per options).\n`;
       }
 
+      if (tempDir && fs.existsSync(tempDir)) {
+        fs.rmSync(tempDir, { recursive: true, force: true });
+      }
+
+      const successMsg = hasLocalGit
+        ? `Successfully created and pushed release '${tag}' directly in local repository (${repoPath})!`
+        : `Successfully created and pushed release '${tag}' via ephemeral scratch clone!`;
+
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(
         JSON.stringify({
           success: true,
-          message: `Successfully created and pushed release '${tag}' via host Git!`,
+          isLocal: hasLocalGit,
+          message: successMsg,
           output: outputLog.trim(),
         })
       );
@@ -129,7 +173,12 @@ const server = http.createServer(async (req, res) => {
   // 3. Fetch remote tags
   if (url === '/exec/fetch' && req.method === 'POST') {
     const body = await parseJsonBody(req);
-    const repoPath = defaultNeutralRepo;
+    const repoPath = body.repoPath?.trim();
+    if (!repoPath) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: "repoPath is required" }));
+      return;
+    }
     try {
       const fetchOutput = execSync(`git -C "${repoPath}" fetch --tags origin`, { encoding: 'utf8' });
       const tagsRaw = execSync(`git -C "${repoPath}" tag -l --sort=-creatordate`, { encoding: 'utf8' });
@@ -146,7 +195,12 @@ const server = http.createServer(async (req, res) => {
   // 4. Git diff preview
   if (url === '/exec/diff' && req.method === 'POST') {
     const body = await parseJsonBody(req);
-    const repoPath = defaultNeutralRepo;
+    const repoPath = body.repoPath?.trim();
+    if (!repoPath) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: "repoPath is required" }));
+      return;
+    }
     const tag = body.tag || '';
     try {
       const diffOutput = execSync(`git -C "${repoPath}" diff --stat "${tag}"`, { encoding: 'utf8' });
@@ -155,6 +209,65 @@ const server = http.createServer(async (req, res) => {
     } catch (err: any) {
       res.writeHead(500, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: err.message, output: err.stdout || err.stderr || err.message }));
+    }
+    return;
+  }
+
+  // 5. Setup / Adopt Local Repository (/exec/setup-repo)
+  if (url === '/exec/setup-repo' && req.method === 'POST') {
+    const body = await parseJsonBody(req);
+    const remoteUrl = body.remoteUrl?.trim();
+    const repoPath = body.repoPath?.trim();
+    const branch = body.branch?.trim() || 'main';
+
+    if (!remoteUrl) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'remoteUrl is required' }));
+      return;
+    }
+    if (!repoPath) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'repoPath is required' }));
+      return;
+    }
+
+    try {
+      if (fs.existsSync(path.join(repoPath, '.git'))) {
+        // Adopt existing local repo
+        try {
+          const curRemote = execSync(`git -C "${repoPath}" remote get-url origin`, { encoding: 'utf8' }).trim();
+          if (curRemote !== remoteUrl) {
+            execSync(`git -C "${repoPath}" remote set-url origin "${remoteUrl}"`);
+          }
+        } catch {
+          execSync(`git -C "${repoPath}" remote add origin "${remoteUrl}"`);
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          isExisting: true,
+          repoPath,
+          message: `Existing local repository adopted at ${repoPath}`,
+        }));
+        return;
+      }
+
+      // Clone new repo
+      fs.mkdirSync(repoPath, { recursive: true });
+      execSync(`git clone --branch "${branch}" "${remoteUrl}" "${repoPath}"`, { encoding: 'utf8' });
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: true,
+        isExisting: false,
+        repoPath,
+        message: `Successfully cloned remote repository into ${repoPath}`,
+      }));
+    } catch (err: any) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: false,
+        error: `Failed to set up repository at ${repoPath}: ${err.message}`,
+      }));
     }
     return;
   }

@@ -155,7 +155,7 @@ export const config: SlottdConfig = {
         { name: 'slug', type: 'TEXT', widget: 'slug', label: 'Slug', required: true },
         { name: 'tabName', type: 'TEXT', widget: 'text', label: 'Tab Label', required: true },
         { name: 'language', type: 'TEXT', widget: 'text', label: 'Language (json, rust, graphql)', required: true },
-        { name: 'code', type: 'TEXT', widget: 'code', label: 'Code Content', required: true },
+        { name: 'code', type: 'TEXT', widget: 'textarea', label: 'Code Content', required: true },
         { name: 'order', type: 'INTEGER', widget: 'number', label: 'Display Order', defaultValue: 10 },
       ],
     },
