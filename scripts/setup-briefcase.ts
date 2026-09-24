@@ -313,7 +313,7 @@ async function main() {
       OPERATOR_NAME: 'Local Briefcase operator attribution',
       ADMIN_API_KEY: 'Local-only random key (isolated from staging/prod)',
       JWT_SECRET: 'Local session secret',
-      ADMIN_PASSWORD_HASH: 'HMAC-SHA256 hashed password (encrypted at rest)',
+      ADMIN_PASSWORD_HASH: 'HMAC-SHA256 bootstrap password (ignored if changed via Studio UI system_settings)',
       REPO_PATH: 'Local repository root path',
       CONTENT_DIR: 'Relative content directory',
       GIT_REMOTE_URL: 'Remote Git content repository URL',
