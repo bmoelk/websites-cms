@@ -235,7 +235,7 @@ export const config: SlottdConfig = {
 
   // 3. Git Backup Target
   git: {
-    repo: 'git@github.com:bmoelk/brainendeavor.com.git',
+    repo: 'https://github.com/brainendeavor/brainendeavor.com.git',
     branch: 'main',
     path: '',
     includeDrafts: true,
