@@ -96,6 +96,46 @@ const server = http.createServer(async (req, res) => {
         outputLog += `📂 [Bridge] Releasing directly in local repository: ${repoPath}\n`;
       }
 
+      const force = body.force === true || body.useLocal === true;
+
+      if (hasLocalGit && push) {
+        try {
+          execSync(`git -C "${workingDir}" fetch origin "${branch}"`, { encoding: 'utf8', stdio: ['pipe', 'pipe', 'ignore'] });
+          const behindCount = parseInt(
+            execSync(`git -C "${workingDir}" rev-list --count HEAD..origin/"${branch}"`, { encoding: 'utf8' }).trim(),
+            10
+          ) || 0;
+
+          if (behindCount > 0) {
+            const diffFiles = execSync(`git -C "${workingDir}" diff --name-only HEAD..origin/"${branch}"`, { encoding: 'utf8' })
+              .trim()
+              .split('\n')
+              .map(f => f.trim())
+              .filter(Boolean);
+
+            const conflictingFiles = diffFiles.filter(f => f.endsWith('.json') || f.endsWith('.md'));
+            if (conflictingFiles.length > 0 && !force) {
+              res.writeHead(409, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({
+                success: false,
+                conflict: true,
+                conflictingFiles,
+                remoteCommits: behindCount,
+                message: `Upstream changes detected in ${conflictingFiles.length} document(s). Choose resolution: Overwrite Remote (Use Local) or Save as Draft (Safe).`,
+              }));
+              return;
+            }
+
+            if (conflictingFiles.length === 0) {
+              outputLog += `[Bridge] Fast-forwarding upstream disjoint changes (${diffFiles.join(', ')})...\n`;
+              execSync(`git -C "${workingDir}" merge --ff-only origin/"${branch}"`, { encoding: 'utf8' });
+            }
+          }
+        } catch (fetchErr: any) {
+          outputLog += `[Bridge] Upstream drift check notice: ${fetchErr.message}\n`;
+        }
+      }
+
       // Step A: Trigger fresh export from D1 to content files
       outputLog += `[Bridge] Exporting active D1 database to ${workingDir} (site: ${siteId})...\n`;
       try {
@@ -129,14 +169,26 @@ const server = http.createServer(async (req, res) => {
       // Step C: Push via host SSH key
       if (push) {
         outputLog += `[Bridge] Pushing commit and tag to Git remote...\n`;
+        const forceFlag = force ? ' --force-with-lease' : '';
         const pushRes = execSync(
-          `git -C "${workingDir}" push origin HEAD && git -C "${workingDir}" push origin "${tag.replace(/"/g, '\\"')}"`,
+          `git -C "${workingDir}" push${forceFlag} origin HEAD && git -C "${workingDir}" push origin "${tag.replace(/"/g, '\\"')}"`,
           { encoding: 'utf8' }
         );
         if (pushRes.trim()) outputLog += pushRes.trim() + '\n';
         outputLog += `✅ Release '${tag}' successfully pushed to remote!\n`;
       } else {
         outputLog += `✓ Tagged locally (push skipped per options).\n`;
+      }
+
+      // Step D: Record git_release in activity_log
+      try {
+        const detailsJson = JSON.stringify({ tag, branch, isLocal: hasLocalGit, pushed: push }).replace(/'/g, "''");
+        execSync(
+          `npx wrangler d1 execute DB --local --command="INSERT INTO activity_log (id, site_id, timestamp, actor, action, collection, document_id, document_title, details) VALUES ('act_${Date.now()}', '${siteId}', ${Date.now()}, 'bridge@localhost', 'git_release', '_git', '${tag}', 'Release ${tag}', '${detailsJson}');"`,
+          { cwd: cmsRootDir, encoding: 'utf8' }
+        );
+      } catch (logErr: any) {
+        outputLog += `[Notice] git_release activity log notice: ${logErr.message}\n`;
       }
 
       if (tempDir && fs.existsSync(tempDir)) {

@@ -34,6 +34,9 @@ async function runGitSync() {
   const isExport = process.argv.includes('--export') || !process.argv.includes('--hydrate');
   const isRemote = process.argv.includes('--remote');
   const envFlag = isRemote ? '--remote' : '--local';
+  const configFlag = (isRemote && fs.existsSync(path.join(process.cwd(), 'wrangler.overrides.toml')))
+    ? '-c wrangler.overrides.toml'
+    : '';
 
   const tagArg = process.argv.find((a) => a.startsWith('--tag='));
   const targetTag = tagArg ? tagArg.split('=')[1] : null;
@@ -58,7 +61,7 @@ async function runGitSync() {
 
     // 1. Fetch all documents from local or remote D1
     const exportJson = execSync(
-      `npx wrangler d1 execute DB ${envFlag} --command="SELECT id, collection, slug, title, status, schema_version, publish_at, data, created_at, updated_at FROM documents WHERE site_id = '${targetSite}'" --json`,
+      `npx wrangler d1 execute DB ${envFlag} ${configFlag} --command="SELECT id, collection, slug, title, status, schema_version, publish_at, data, created_at, updated_at FROM documents WHERE site_id = '${targetSite}'" --json`,
       { encoding: 'utf8' }
     );
 
@@ -131,6 +134,26 @@ async function runGitSync() {
     }
 
     console.log(`✅ Successfully exported ${exportedCount} documents to ${contentDir}`);
+
+    // 3b. Export activity log into .slottd/activity.jsonl
+    try {
+      const actJson = execSync(
+        `npx wrangler d1 execute DB ${envFlag} ${configFlag} --command="SELECT id, site_id, timestamp, actor, action, collection, document_id, document_title, details FROM activity_log WHERE site_id = '${targetSite}' ORDER BY timestamp ASC" --json`,
+        { encoding: 'utf8' }
+      );
+      const parsedAct = JSON.parse(actJson);
+      const actRows = parsedAct[0]?.results || [];
+      if (actRows.length > 0) {
+        const slottdDir = path.join(contentDir, '.slottd');
+        if (!fs.existsSync(slottdDir)) fs.mkdirSync(slottdDir, { recursive: true });
+        const actFilePath = path.join(slottdDir, 'activity.jsonl');
+        const lines = actRows.map((r: any) => JSON.stringify(r)).join('\n') + '\n';
+        fs.writeFileSync(actFilePath, lines, 'utf8');
+        console.log(`📜 Exported ${actRows.length} activity records to .slottd/activity.jsonl`);
+      }
+    } catch (e: any) {
+      console.warn(`⚠️ Activity log export notice: ${e.message}`);
+    }
 
     const isPush = process.argv.includes('--push');
     const releaseTag = targetTag || (isPush ? `release-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}` : null);
@@ -213,6 +236,37 @@ async function runGitSync() {
       }
     }
 
+    // Restore activity logs from .slottd/activity.jsonl if present
+    const activityFilePath = path.join(contentDir, '.slottd', 'activity.jsonl');
+    let activityHydratedCount = 0;
+    if (fs.existsSync(activityFilePath)) {
+      const actContent = fs.readFileSync(activityFilePath, 'utf8');
+      const lines = actContent.split('\n').map((l) => l.trim()).filter(Boolean);
+      for (const line of lines) {
+        try {
+          const act = JSON.parse(line);
+          const safeId = (act.id || '').replace(/'/g, "''");
+          const safeSite = (act.site_id || targetSite).replace(/'/g, "''");
+          const safeActor = (act.actor || 'system').replace(/'/g, "''");
+          const safeAction = (act.action || '').replace(/'/g, "''");
+          const safeCol = (act.collection || '').replace(/'/g, "''");
+          const safeDocId = (act.document_id || '').replace(/'/g, "''");
+          const safeTitle = act.document_title ? `'${act.document_title.replace(/'/g, "''")}'` : 'NULL';
+          const safeDetails = act.details ? `'${(typeof act.details === 'string' ? act.details : JSON.stringify(act.details)).replace(/'/g, "''")}'` : 'NULL';
+          const time = Number(act.timestamp) || Date.now();
+
+          sqlStatements.push(`
+            INSERT OR IGNORE INTO activity_log (id, site_id, timestamp, actor, action, collection, document_id, document_title, details)
+            VALUES ('${safeId}', '${safeSite}', ${time}, '${safeActor}', '${safeAction}', '${safeCol}', '${safeDocId}', ${safeTitle}, ${safeDetails});
+          `);
+          activityHydratedCount++;
+        } catch {}
+      }
+      if (activityHydratedCount > 0) {
+        console.log(`📜 Queued ${activityHydratedCount} activity log records for restoration.`);
+      }
+    }
+
     if (sqlStatements.length === 0) {
       console.log('⚠️ No documents found in content/ to hydrate.');
       return;
@@ -222,7 +276,7 @@ async function runGitSync() {
     fs.writeFileSync(tempSqlFile, sqlStatements.join('\n'), 'utf8');
 
     try {
-      execSync(`npx wrangler d1 execute DB ${envFlag} --file="${tempSqlFile}"`, {
+      execSync(`npx wrangler d1 execute DB ${envFlag} ${configFlag} -y --file="${tempSqlFile}"`, {
         stdio: 'inherit',
         cwd: process.cwd(),
       });

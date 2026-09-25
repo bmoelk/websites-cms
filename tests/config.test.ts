@@ -5,6 +5,7 @@ describe('BrainEndeavor SlottD CMS Configuration & Standardized Hooks', () => {
   it('defines site-specific collections and model packs', () => {
     expect(config.packs).toBeDefined();
     expect(config.collections).toHaveProperty('projects');
+    expect(config.collections.projects.fields.some((f: any) => f.name === 'stage')).toBe(true);
     expect(config.collections).toHaveProperty('services');
     expect(config.collections).toHaveProperty('testimonials');
     expect(config.collections).toHaveProperty('homepage_sections');
