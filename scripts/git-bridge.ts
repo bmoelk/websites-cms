@@ -10,8 +10,22 @@ const __dirname = path.dirname(__filename);
 
 const PORT = 8788;
 const HOST = '127.0.0.1';
-const cmsRootDir = path.resolve(__dirname, '..');
-const defaultNeutralRepo = '/Users/bmo/code/websites-deployed/brainendeavor.com';
+const defaultNeutralRepo = '/Users/bmo/code/websites-git-repos/brainendeavor.com';
+
+function resolveRepoForSite(siteId?: string, declaredRepo?: string): string {
+  const candidates = [
+    declaredRepo,
+    siteId ? path.resolve('/Users/bmo/code/websites-git-repos', siteId) : null,
+    defaultNeutralRepo,
+  ].filter(Boolean) as string[];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(path.join(candidate, '.git'))) {
+      return candidate;
+    }
+  }
+  return declaredRepo || defaultNeutralRepo;
+}
 
 function parseJsonBody(req: http.IncomingMessage): Promise<any> {
   return new Promise((resolve) => {
@@ -59,7 +73,7 @@ const server = http.createServer(async (req, res) => {
       res.end(JSON.stringify({ success: false, error: "siteId is required for Git release operations; the 'default' site concept has been abolished." }));
       return;
     }
-    const repoPath = body.repoPath?.trim();
+    const repoPath = resolveRepoForSite(siteId, body.repoPath?.trim());
     if (!repoPath) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ success: false, error: "repoPath is required for Git release operations." }));
@@ -225,7 +239,7 @@ const server = http.createServer(async (req, res) => {
   // 3. Fetch remote tags
   if (url === '/exec/fetch' && req.method === 'POST') {
     const body = await parseJsonBody(req);
-    const repoPath = body.repoPath?.trim();
+    const repoPath = resolveRepoForSite(body.siteId?.trim(), body.repoPath?.trim());
     if (!repoPath) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: "repoPath is required" }));
@@ -247,7 +261,7 @@ const server = http.createServer(async (req, res) => {
   // 4. Git diff preview
   if (url === '/exec/diff' && req.method === 'POST') {
     const body = await parseJsonBody(req);
-    const repoPath = body.repoPath?.trim();
+    const repoPath = resolveRepoForSite(body.siteId?.trim(), body.repoPath?.trim());
     if (!repoPath) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ error: "repoPath is required" }));
@@ -327,7 +341,7 @@ const server = http.createServer(async (req, res) => {
   // 6. Tag details (/exec/tag-details)
   if (url === '/exec/tag-details' && req.method === 'POST') {
     const body = await parseJsonBody(req);
-    const repoPath = body.repoPath?.trim();
+    const repoPath = resolveRepoForSite(body.siteId?.trim(), body.repoPath?.trim());
     const tag = body.tag?.trim();
     if (!tag) {
       res.writeHead(400, { 'Content-Type': 'application/json' });
@@ -366,6 +380,15 @@ const server = http.createServer(async (req, res) => {
           date = parts[2];
         }
       } catch {}
+
+      if (!message && !commitSha) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: false,
+          error: `Tag ${tag} not found in repository ${repoPath}`,
+        }));
+        return;
+      }
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({
