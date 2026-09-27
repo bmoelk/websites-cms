@@ -324,6 +324,68 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // 6. Tag details (/exec/tag-details)
+  if (url === '/exec/tag-details' && req.method === 'POST') {
+    const body = await parseJsonBody(req);
+    const repoPath = body.repoPath?.trim();
+    const tag = body.tag?.trim();
+    if (!tag) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'tag is required' }));
+      return;
+    }
+    if (!repoPath || !fs.existsSync(path.join(repoPath, '.git'))) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: `Invalid or missing local repository at ${repoPath}` }));
+      return;
+    }
+
+    try {
+      // 1. Message: Try annotated tag contents first, fallback to commit message
+      let message = '';
+      try {
+        message = execSync(`git -C "${repoPath}" tag -l --format="%(contents)" "${tag.replace(/"/g, '\\"')}"`, { encoding: 'utf8' }).trim();
+      } catch {}
+
+      if (!message) {
+        try {
+          message = execSync(`git -C "${repoPath}" log -1 --format="%B" "${tag.replace(/"/g, '\\"')}"`, { encoding: 'utf8' }).trim();
+        } catch {}
+      }
+
+      // 2. Metadata (SHA, Author, Date)
+      let commitSha: string | undefined;
+      let author: string | undefined;
+      let date: string | undefined;
+      try {
+        const metaRaw = execSync(`git -C "${repoPath}" log -1 --format="%H%x1f%an <%ae>%x1f%aI" "${tag.replace(/"/g, '\\"')}"`, { encoding: 'utf8' }).trim();
+        const parts = metaRaw.split('\x1f');
+        if (parts.length >= 3) {
+          commitSha = parts[0];
+          author = parts[1];
+          date = parts[2];
+        }
+      } catch {}
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: true,
+        tag,
+        commitSha,
+        message: message || `Release ${tag}`,
+        author,
+        date,
+      }));
+    } catch (err: any) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: false,
+        error: `Failed to retrieve details for tag ${tag}: ${err.message}`,
+      }));
+    }
+    return;
+  }
+
   res.writeHead(404, { 'Content-Type': 'application/json' });
   res.end(JSON.stringify({ error: 'Endpoint not found on Git bridge' }));
 });
