@@ -59,19 +59,33 @@ async function runGitSync() {
   if (isExport) {
     console.log(`🚀 Exporting SlottD D1 database (${envFlag}, site: ${targetSite}) to Git content directory: ${contentDir}...`);
 
-    // 1. Fetch all documents from local or remote D1
-    const exportJson = execSync(
-      `npx wrangler d1 execute DB ${envFlag} ${configFlag} --command="SELECT id, collection, slug, title, status, schema_version, publish_at, data, created_at, updated_at FROM documents WHERE site_id = '${targetSite}'" --json`,
-      { encoding: 'utf8' }
-    );
+function findLocalSqlite(): string | null {
+  const baseDir = path.resolve(process.cwd(), '.wrangler/state/v3/d1/miniflare-D1DatabaseObject');
+  if (!fs.existsSync(baseDir)) return null;
+  const files = fs.readdirSync(baseDir).filter((f) => f.endsWith('.sqlite'));
+  return files.length > 0 ? path.join(baseDir, files[0]) : null;
+}
 
+    // 1. Fetch all documents from local or remote D1
     let rows: any[] = [];
-    try {
-      const parsed = JSON.parse(exportJson);
-      rows = parsed[0]?.results || [];
-    } catch (e: any) {
-      console.error('Failed to parse D1 output:', e.message);
-      return;
+    const localSqlitePath = !isRemote ? findLocalSqlite() : null;
+
+    if (localSqlitePath) {
+      const { DatabaseSync } = await import('node:sqlite');
+      const db = new DatabaseSync(localSqlitePath);
+      rows = db.prepare(`SELECT id, collection, slug, title, status, schema_version, publish_at, data, created_at, updated_at FROM documents WHERE site_id = ?`).all(targetSite) as any[];
+    } else {
+      const exportJson = execSync(
+        `npx wrangler d1 execute DB ${envFlag} ${configFlag} --command="SELECT id, collection, slug, title, status, schema_version, publish_at, data, created_at, updated_at FROM documents WHERE site_id = '${targetSite}'" --json`,
+        { encoding: 'utf8' }
+      );
+      try {
+        const parsed = JSON.parse(exportJson);
+        rows = parsed[0]?.results || [];
+      } catch (e: any) {
+        console.error('Failed to parse D1 output:', e.message);
+        return;
+      }
     }
 
     if (rows.length === 0) {
@@ -137,12 +151,19 @@ async function runGitSync() {
 
     // 3b. Export activity log into .slottd/activity.jsonl
     try {
-      const actJson = execSync(
-        `npx wrangler d1 execute DB ${envFlag} ${configFlag} --command="SELECT id, site_id, timestamp, actor, action, collection, document_id, document_title, details FROM activity_log WHERE site_id = '${targetSite}' ORDER BY timestamp ASC" --json`,
-        { encoding: 'utf8' }
-      );
-      const parsedAct = JSON.parse(actJson);
-      const actRows = parsedAct[0]?.results || [];
+      let actRows: any[] = [];
+      if (localSqlitePath) {
+        const { DatabaseSync } = await import('node:sqlite');
+        const db = new DatabaseSync(localSqlitePath);
+        actRows = db.prepare(`SELECT id, site_id, timestamp, actor, action, collection, document_id, document_title, details FROM activity_log WHERE site_id = ? ORDER BY timestamp ASC`).all(targetSite) as any[];
+      } else {
+        const actJson = execSync(
+          `npx wrangler d1 execute DB ${envFlag} ${configFlag} --command="SELECT id, site_id, timestamp, actor, action, collection, document_id, document_title, details FROM activity_log WHERE site_id = '${targetSite}' ORDER BY timestamp ASC" --json`,
+          { encoding: 'utf8' }
+        );
+        const parsedAct = JSON.parse(actJson);
+        actRows = parsedAct[0]?.results || [];
+      }
       if (actRows.length > 0) {
         const slottdDir = path.join(contentDir, '.slottd');
         if (!fs.existsSync(slottdDir)) fs.mkdirSync(slottdDir, { recursive: true });
