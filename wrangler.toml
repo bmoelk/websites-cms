@@ -23,6 +23,7 @@ crons = ["0 * * * *"]
 
 [vars]
 ENVIRONMENT = "development"
+DEFAULT_SITE_ID = "brainendeavor.com"
 STAGING_URL = "https://brainendeavor-staging.pages.dev"
 PRODUCTION_URL = "https://brainendeavor.com"
 # Production & staging deploy hook URLs should be provided via wrangler.overrides.toml or Cloudflare KMS
